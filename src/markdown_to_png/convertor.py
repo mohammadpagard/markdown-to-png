@@ -1,6 +1,9 @@
 import markdown
 import imgkit
 import os
+import threading
+
+from tool import progress_bar
 
 
 def markdown_to_png(markdown_path, output_path, css_path='template/style.css'):
@@ -63,8 +66,16 @@ def markdown_to_png(markdown_path, output_path, css_path='template/style.css'):
         'enable-local-file-access': '',
     }
 
+    print("Starting conversion...")
+    estimated_duration = 5
+
+    # start the progress bar in a separate thread
+    progress_thread = threading.Thread(target=progress_bar, args=(50, estimated_duration))
+    progress_thread.start()
+
+    # perform the conversion
     try:
         imgkit.from_file(html_path, f'{output_path}.png', options=options, css=css_path)
-        print(f"PNG file '{output_path}.png' created successfully.")
-    except Exception as e:
-        print(f"Error: {e}")
+    finally:
+        progress_thread.join()  # wait for the progress bar to complete
+        print("\nConversion Complete!")
