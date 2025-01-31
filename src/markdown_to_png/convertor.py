@@ -3,7 +3,7 @@ import imgkit
 import os
 import threading
 
-from tool import progress_bar
+from markdown_to_png.tool import progress_bar
 
 
 def markdown_to_png(markdown_path, output_path, css_path='template/style.css'):
